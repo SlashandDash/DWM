@@ -3,6 +3,11 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+static const unsigned int systrayonleft = 0;    /* 0: systray in the right corner, >0: systray on left of status text */
+static const unsigned int systrayspacing = 2;   /* systray spacing */
+static const int systraypinningfailfirst = 1;   /* 1: if pinning fails, display systray on the first monitor, False: display systray on the last monitor*/
+static const int showsystray        = 1;        /* 0 means no systray */
 static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static const unsigned int gappih    = 20;       /* horiz inner gap between windows */
 static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
@@ -89,17 +94,41 @@ static const char *newsboat[]  = { "st", "-e", "newsboat" , NULL };
 static const char *volumeminus[]  = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "-5%", NULL };
 static const char *volumeplus[]  = { "pactl", "set-sink-volume", "@DEFAULT_SINK@", "+5%", NULL };
 static const char *firefox[]  = { "firefox", NULL };
+static const char *xkill[]  = { "xkill", NULL };
+static const char *main_scrot[]  = { "scrot_main.sh", NULL };
+static const char *cropped_scrot[]  = { "scrot_crop.sh", NULL };
+static const char *slock[]  = { "slock", NULL };
+
+static const char *quitdat[]  = { "quitdwm.sh", NULL };
+
+static const char *geometrydash[]  = { "geometydash", NULL };
+static const char *osu[]  = { "osu-wine", NULL };
+static const char *etterna[]  = { "etterna", NULL };
+
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
 	{ MODKEY,                       XK_p,      spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY,           			XK_s,	   togglesticky,	{0} },
 	{ MODKEY,                       XK_F1,     spawn,          {.v = firefox } },
 	{ MODKEY,                       XK_F2,     spawn,          {.v = pulsemixer } },
 	{ MODKEY,                       XK_F3,     spawn,          {.v = htop } },
 	{ MODKEY,                       XK_F4,     spawn,          {.v = newsboat } },
+
+	{ MODKEY,                       XK_F5,     spawn,          {.v = geometrydash } },
+	{ MODKEY,                       XK_F6,     spawn,          {.v = osu } },
+	{ MODKEY,                       XK_F7,     spawn,          {.v = etterna } },
+	{ MODKEY,                       XK_F9,     spawn,          {.v = slock } },
+
+	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = quitdat } },
+
 	{ MODKEY,                       XK_minus,  spawn,          {.v = volumeminus } },
 	{ MODKEY,                       XK_equal,  spawn,          {.v = volumeplus } },
+	{ MODKEY|ShiftMask,             XK_q,      spawn,          {.v = xkill } },
+	{ MODKEY,                       XK_a,      spawn,          {.v = cropped_scrot } },
+	{ MODKEY|ShiftMask,             XK_a,      spawn,          {.v = main_scrot } },
+	{ MODKEY,                       XK_grave,  spawn,          {.v = lf } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -130,7 +159,7 @@ static const Key keys[] = {
 	//{ MODKEY|Mod4Mask,              XK_0,      togglegaps,     {0} },
 	//{ MODKEY|Mod4Mask|ShiftMask,    XK_0,      defaultgaps,    {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY,	                XK_q,      killclient,     {0} },
+	{ MODKEY,	                    XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_r,      setlayout,      {.v = &layouts[2]} },
@@ -152,7 +181,6 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_e,      quit,           {0} },
 };
 
 /* button definitions */
